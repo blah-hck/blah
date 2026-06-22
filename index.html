@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0f',
+                        card: '#16161f',
+                        accent: '#9945ff',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glow {
+                box-shadow: 0 0 20px rgba(153, 69, 255, 0.3);
+            }
+            .text-glow {
+                text-shadow: 0 0 8px rgba(153, 69, 255, 0.5);
+            }
+        }
+
+        body {
+            background: linear-gradient(to bottom, #000000, #1a0505);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen text-white p-4">
+    <!-- Main Card -->
+    <div class="bg-card/80 backdrop-blur-md rounded-3xl p-8 w-full max-w-md glow border border-gray-800">
+        <!-- Profile Picture -->
+        <div class="flex justify-center mb-6">
+            <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-accent/60">
+                <img src="https://i.imgur.com/M630Z7k.gif" alt="Profile" class="w-full h-full object-cover">
+            </div>
+        </div>
+
+        <!-- Badges/Icons -->
+        <div class="flex justify-center gap-3 mb-6">
+            <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">☠️</span>
+            <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">⚜️</span>
+            <span class="bg-gray-800 px-3 py-1 rounded-full text-sm font-bold">PR$K</span>
+        </div>
+
+        <!-- Custom Text -->
+        <div class="bg-gray-800/60 rounded-xl py-3 mb-8">
+            <p class="text-center text-gray-300 italic">Be Better</p>
+        </div>
+
+        <!-- Username Section -->
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-gray-700 overflow-hidden">
+                <img src="https://i.imgur.com/KGPggfn.jpeg" alt="Avatar" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <p class="font-bold text-lg">BLAH<span class="text-sm text-gray-400">⚡ PR$K</span></p>
+                <p class="text-sm text-gray-400">EMPTY.</p>
+            </div>
+        </div>
+
+        <!-- Status Text -->
+        <p class="text-center text-gray-400 text-sm mb-8">the world is your.</p>
+
+        <a href="https://discord.com/users/14973067157" target="_blank" class="text-indigo-500 text-4xl hover:scale-110 transition-transform">
+  <i class="fa-brands fa-discord"></i>
+
+</a>
+<a href="#" class="text-gray-400 text-4xl hover:scale-110 transition-transform">
+  <i class="fa-brands fa-discord"></i>
+</a>
+
+
+        <!-- Footer -->
+        <div class="flex justify-between items-center mt-4 text-gray-400 text-sm">
+            <span class="flex items-center gap-2">
+                <span class="text-purple-500">⦿</span> 1337
+            </span>
+            <span>on</span>
+        </div>
+    </div>
+
+<!-- Background Sound -->
+<audio id="bgSound" loop preload="auto">
+  <source src="https://mp3tourl.com/audio/1782125485468-d36d7923-f6a4-4d8c-b7fc-4d0b7b862457.mp3">
+
+
+<script>
+const audio = document.getElementById('bgSound');
+audio.volume = 0.4; // Lakas: 0.1 (mahina) hanggang 1 (malakas)
+
+// Tutugtog pagkatapos pindutin ang screen
+document.addEventListener('click', () => {
+  audio.play().catch(err => console.log("Hindi tumugtog:", err));
+}, { once: true });
+</script>
+</body>
+</html>
